@@ -1,0 +1,32 @@
+{
+  "params":{
+    "dev":true
+  },
+  "vis":{
+    "type":"flapper",
+    "title":"Flapper"
+  },
+  "style":{
+    "font":"DecimaMonoProBold",
+    "color":{
+      "main":"#71609B",
+      "second": "#D8D8D8",
+      "background":"#fff"
+    }
+  },
+  "data":{
+    "columns":["Wert"],
+    "types":["int"],
+    "data":
+      [
+        {"label":null,"data":[13594]}
+      ]
+    ,
+    "lables":[null],
+    "title": "Tage seit Nichteröffnung des BER",
+    "subTitle": "am 29.09.2017",
+    "attribution": "Some attribution here",
+    "source": "source: svift team",
+    "format":"one-val"
+  }
+}

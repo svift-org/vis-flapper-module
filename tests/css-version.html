@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<!-- <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet"> -->
+<link href="https://fonts.googleapis.com/css?family=Roboto+Mono:700|Patua+One|Noto+Serif:700|Open+Sans:700" rel="stylesheet">
+<style>
+
+  body {
+    background-color: #fff;
+    font: 116px "Roboto Mono";
+    color: #ecdb41; 
+    text-align: center;
+  }
+
+  div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+
+  span {
+    position: relative;
+  }
+
+  .flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 110px;
+    right: auto;
+  }
+
+  .half {
+    height: 62px;
+    overflow: hidden;
+    background: #444;
+/*    transform-style: preserve-3d;*/
+    animation-timing-function: ease-in;
+    animation-duration: 0.28s;
+    animation-iteration-count: infinite;
+  }
+  .fast .half {
+    animation-duration: 0.14s;
+  }
+  .divider {
+    top: 61px;
+    height: 2px;
+    background: #222;
+  }
+  .prev {
+    top: 62px;
+  }
+  .back,
+  .front {
+    backface-visibility: hidden;
+  }
+  .front {
+    transform-origin: center bottom;
+  }
+  .back {
+    top: 62px;
+    transform-origin: center top;
+  }
+  .front span,
+  .next span {
+    top: -17px;
+  }
+  .back span,
+  .prev span {
+    top: -79px;
+  }
+  .animated .front {
+    animation-name: flipFront;
+  }
+  .animated .back {
+    animation-name: flipBack;
+  }
+  @keyframes flipFront {
+    0% {
+      transform: rotateX(0deg);
+      background-color: #444;
+    }
+    100% {
+      transform: rotateX(180deg);
+      background-color: #1c1c1c;
+    }
+  }
+  @keyframes flipBack {
+    0% {
+      transform: rotateX(180deg);
+      background-color: #222;
+    }
+    100% {
+      transform: rotateX(0deg);
+      background-color: #444;
+    }
+  }
+</style>
+<!-- <div>Tage seit nicht</div> -->
+<div class="container"></div>
+<script src="d3.v4.min.js"></script>
+<script>
+
+
+
+var svg = d3.select(".container").append("svg")
+  .attr("width",500)
+  .attr("height",500)
+
+var data = 123456789;
+var dataZeros = "";
+for (var i = 0; i < data.toString().length; i++) {
+  dataZeros+="0";
+};
+
+var numberCycle =  { 0: "1", 1: "2", 2: "3", 3: "4", 4: "5", 5: "6", 6: "7", 7: "8", 8: "9", 9: " "}
+
+var flaps = d3.select(".container").selectAll("div")
+  .data(dataZeros)
+  .enter()
+  .append("div")
+    .attr("class", "flap")
+    .style("left", (d, i) => i * 118 + "px");
+
+["next", "prev", "back", "front"].forEach(function(d){
+  if (d === "front") {
+    flaps.append("div")
+      .attr("class", "divider");
+  }
+
+  flaps.append("div")
+    .attr("class", "half " + d)
+    .append("span")
+      .text(function(d){return d});
+});
+
+d3.selectAll(".flap")
+  .each(function(startNumber, i) {
+    var endNumber = data.toString()[i];
+    var flap = d3.select(this);
+    flipper(flap, endNumber);
+  });
+
+function flipper(flap ,endNumber) {
+
+  var next = 0;
+  var prevFlaps = flap.selectAll(".prev span, .front span");
+  var fast;
+
+  flap.select(".front").on("animationiteration", function() {
+
+    //if end of animation
+    if (next === endNumber) {
+      flap.classed("animated fast", false)
+        .selectAll("span")
+          .text(endNumber);
+    }
+
+    if (!fast) {
+      fast = flap.classed("fast", true);
+    }
+
+    prevFlaps.text(next);
+    next = numberCycle[next];
+
+  });
+
+  flap.classed("animated", true);
+
+}
+</script>
